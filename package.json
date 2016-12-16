@@ -1,0 +1,17 @@
+{
+  "name": "gulp-nuspec",
+  "version": "1.0.0",
+  "description": "A gulp plugin to generate a .nuspec file for your package content",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gulp",
+    "nuspec",
+    "nuget",
+    "package"
+  ],
+  "author": "Microsoft",
+  "license": "ISC"
+}
