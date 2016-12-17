@@ -4,7 +4,7 @@
   "description": "A gulp plugin to generate a .nuspec file for your package content",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "keywords": [
     "gulp",
@@ -13,5 +13,14 @@
     "package"
   ],
   "author": "Microsoft",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "gulp-util": "^3.0.7",
+    "object-assign": "^4.1.0",
+    "through2": "^2.0.3"
+  },
+  "devDependencies": {
+    "jasmine": "^2.5.2",
+    "vinyl": "^2.0.1"
+  }
 }
