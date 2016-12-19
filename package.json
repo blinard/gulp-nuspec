@@ -20,7 +20,9 @@
     "through2": "^2.0.3"
   },
   "devDependencies": {
+    "gulp": "^3.9.1",
     "jasmine": "^2.5.2",
+    "path": "^0.12.7",
     "vinyl": "^2.0.1"
   }
 }

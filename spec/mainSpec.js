@@ -2,16 +2,16 @@
 'use strict';
 
 var gulpNuspec = require('../');
+var gulp = require('gulp');
 var File = require('vinyl');
 /*
 var gutil = require('gulp-util');
 var fs = require('fs');
 var path = require('path');
 var es = require('event-stream');
-var gulp = require('gulp');
 */
 
-const SPEC_BASE = './spec/';
+const SPEC_BASE = 'spec/';
 
 describe('gulp-nuspec', function () {
   var fakeFile;
@@ -31,10 +31,6 @@ describe('gulp-nuspec', function () {
       path: SPEC_BASE + 'fixture/anotherFile.txt'
     });
   }
-
-  beforeEach(function () {
-    fakeFile = getFakeFile('Hello world');
-  });
 
   it("throws error on empty nuspecConfig", function() {
       var caughtErr = undefined;
@@ -58,41 +54,61 @@ describe('gulp-nuspec', function () {
       expect(caughtErr).toBeTruthy();
   });
 
+  it("throws error on empty nuspecConfig author", function() {
+      var caughtErr = undefined;
+      try {
+        gulpNuspec({ id: 'test.id'});
+      } catch(err) {
+        caughtErr = err;
+      }
+
+      expect(caughtErr).toBeTruthy();
+  });
+
+  beforeEach(function () {
+    fakeFile = getFakeFile('Hello world');
+  });
+
   it('file should pass through', function (done) {
     var file_count = 0;
-    var stream = gulpNuspec();
+    var fileDotTextFound = false;
+    var stream = gulpNuspec({ id: 'gulp-nuspec', author: 'me' });
     stream.on('data', function (newFile) {
-      should.exist(newFile);
-      should.exist(newFile.path);
-      should.exist(newFile.relative);
-      should.exist(newFile.contents);
-      newFile.path.should.equal('./test/fixture/file.txt');
-      newFile.relative.should.equal('file.txt');
-      newFile.contents.toString('utf8').should.equal('Hello world');
       ++file_count;
+      if (!fileDotTextFound && 
+          newFile && 
+          newFile.path && 
+          newFile.relative && 
+          newFile.contents && 
+          newFile.path === SPEC_BASE + 'fixture/file.txt' && 
+          newFile.relative === 'file.txt' && 
+          newFile.contents.toString('utf8') === 'Hello world') {
+        fileDotTextFound = true;
+      }
     });
 
     stream.once('end', function () {
-      file_count.should.equal(1);
+      expect(file_count).toBe(2);
       done();
     });
 
     stream.write(fakeFile);
     stream.end();
+
+    expect(fileDotTextFound).toBeTruthy();
   });
 
   it('multiple files should pass through', function (done) {
     var headerText = 'use strict;',
-      stream = gulp.src('./test/fixture/*.txt').pipe(header(headerText)),
+      stream = gulp.src(SPEC_BASE + 'fixture/*.txt').pipe(gulpNuspec({ id: 'gulp-nuspec', author: 'me' })),
       files = [];
 
     stream.on('error', done);
     stream.on('data', function (file) {
-      file.contents.toString('utf8').should.startWith(headerText);
       files.push(file);
     });
     stream.on('end', function () {
-      files.length.should.equal(2);
+      expect(files.length).toBe(3);
       done();
     });
   });
